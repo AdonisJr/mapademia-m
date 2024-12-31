@@ -222,6 +222,7 @@ export default function Feedback({ route }) {
                     <Text className="font-semibold text-slate-600 text-xs">Address: {data.address}</Text>
                     <Text className="font-semibold text-slate-600 text-xs">Owner: {data.owner}</Text>
                     <Text className="font-semibold text-slate-600 text-xs">Contact: {data.contact}</Text>
+                    <Text className="font-semibold text-slate-600 text-xs">Operating Hours: {data.other}</Text>
                 </View>
                 {
                     hasFavorite ?

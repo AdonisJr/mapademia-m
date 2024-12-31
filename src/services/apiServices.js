@@ -49,19 +49,31 @@ export const insertBusiness = async (payload) => {
 
 export const updateBusiness = async (payload, id) => {
     // console.log({ filetype: typeof (payload.image) })
-    console.log({ payload: `/businesses/${id}` })
+    // console.log({ payload: payload })
+    console.log({url: `/updateBusinesses/${id}`})
     try {
-        const response = await apiClient.put(`/businesses/${id}`, payload, {
+        const response = await apiClient.put(`/updateBusinesses/${id}`, payload, {
             headers: {
                 'Content-Type': 'multipart/form-data',
-            },
+            }
         })
         console.log('response data: ', response)
         return response.data;
     } catch (error) {
         console.log({ call: error })
-        // console.log('apiServices/update : ', error.response?.data?.message)
+        console.log('apiServices/update : ', error.response?.data?.message)
         throw new Error('Failed to update business.')
+    }
+}
+
+export const deleteBusiness = async (id) => {
+    try {
+        const response = await apiClient.delete(`/businesses/${id}`)
+        // console.log('response data: ', response.data)
+        return response.data;
+    } catch (error) {
+        console.log('apiServices/deleteBusiness : ', error)
+        throw new Error('Failed to delete businesses.')
     }
 }
 
@@ -150,6 +162,30 @@ export const fetchUsers = async (id) => {
     } catch (error) {
         console.log('apiServices/fetchusers : ', error)
         throw new Error('Failed to fetch users.')
+    }
+}
+
+export const updateUser = async (payload) => {
+    try {
+        const response = await apiClient.put(`/users/${payload.id}`, payload)
+        // console.log('users: ', response.data)
+        return response.data;
+    } catch (error) {
+        // console.log('apiServices/updateUser : ', error)
+        console.log('apiServices/updateUser : ', error.response?.data?.message)
+        throw new Error('Failed to update users.')
+    }
+}
+
+export const changePassword = async (payload) => {
+    try {
+        const response = await apiClient.put(`/changePassword`, payload)
+        // console.log('users: ', response.data)
+        return response.data;
+    } catch (error) {
+        // console.log('apiServices/updateUser : ', error)
+        console.log('apiServices/changePassword : ', error.response?.data?.message)
+        throw new Error('Failed to change password.')
     }
 }
 

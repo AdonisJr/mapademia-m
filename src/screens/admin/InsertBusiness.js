@@ -5,9 +5,11 @@ import * as ImagePicker from 'expo-image-picker';
 import { fetchCategory, insertBusiness } from '../../services/apiServices';
 import Loading from '../../components/Loading';
 import { Picker } from '@react-native-picker/picker';
+import { useRefreshStore } from '../../store/refreshStore';
 
 export default function InsertBusiness({ navigation, route }) {
     const data = route.params.data;
+    const toggleRefresh = useRefreshStore(state => state.toggleRefresh);
     const [categories, setCategories] = useState([]);
     const [mainDataLoading, setMainDataLoading] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -89,6 +91,7 @@ export default function InsertBusiness({ navigation, route }) {
                 text1: 'Success',
                 text2: 'Business added successfully!',
             });
+            toggleRefresh();
     
             // Return to the previous screen after a delay
             setTimeout(() => {
@@ -233,7 +236,7 @@ export default function InsertBusiness({ navigation, route }) {
                     onChangeText={(text) => handleInputChange('owner', text)}
                 />
 
-                <Text className="text-lg text-slate-700 mb-2">Other</Text>
+                <Text className="text-lg text-slate-700 mb-2">Operating Hours</Text>
                 <TextInput
                     className="border border-gray-300 p-2 rounded mb-4"
                     placeholder="Enter other"

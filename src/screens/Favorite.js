@@ -10,7 +10,7 @@ import { useFavoriteStore } from '../store/favoriteStore';
 import { getData } from '../utils/LocalStorage';
 
 const FavoritesScreen = ({ navigation, route }) => {
-    const data = route.params.data;
+    // const data = route.params.data;
     const { initializeFavoriteStore } = useFavoriteStore();
     const favoritesData = useFavoriteStore(state => state.favoritesData);
     const [favorites, setFavorites] = useState([]);
