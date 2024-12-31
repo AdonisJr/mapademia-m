@@ -29,6 +29,9 @@ import { useNavigation } from '@react-navigation/native';
 import BusinessesScreen from './src/screens/admin/BusinessesScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import UpdateBusiness from './src/screens/admin/UpdateBusiness';
+import UpdateUser from './src/screens/admin/UpdateUser';
+import ChangePassword from './src/screens/admin/ChangePassword';
+import ManageInformation from './src/screens/admin/ManageInformation';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -85,6 +88,9 @@ export default function App() {
         <Stack.Screen name="View Business" component={Feedback} />
         <Stack.Screen name="Your Favorites" component={Favorite} />
         <Stack.Screen name="Insert User" component={InsertUsers} />
+        <Stack.Screen name="Update User" component={UpdateUser} />
+        <Stack.Screen name="Change Password" component={ChangePassword} />
+        <Stack.Screen name="Manage Information" component={ManageInformation} />
 
       </Stack.Navigator>
     </NavigationContainer>
@@ -121,7 +127,7 @@ function MainApp() {
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-        <Tab.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
+        <Tab.Screen name="Settings" component={SettingsScreen} options={{ headerShown: true }} />
       </Tab.Navigator>
 
       {/* Floating Add Button using NativeWind */}
@@ -174,7 +180,7 @@ function AdminApp() {
         <Tab.Screen name="Home" component={AdminHome} options={{ headerShown: false }} />
         <Tab.Screen name="Business" component={BusinessesScreen} options={{ headerShown: false }} />
         <Tab.Screen name="Users" component={UsersScreen} options={{ headerShown: false }} />
-        <Tab.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
+        <Tab.Screen name="Settings" component={SettingsScreen} options={{ headerShown: true }} />
       </Tab.Navigator>
 
       {/* Floating Add Button using NativeWind */}

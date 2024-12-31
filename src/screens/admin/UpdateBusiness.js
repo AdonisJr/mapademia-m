@@ -43,6 +43,7 @@ export default function UpdateBusiness({ navigation, route }) {
     };
 
     const handleSubmit = async () => {
+        console.log(form)
         setLoading(true);
         try {
             // Validation
@@ -221,7 +222,7 @@ export default function UpdateBusiness({ navigation, route }) {
                     onChangeText={(text) => handleInputChange('owner', text)}
                 />
 
-                <Text className="text-lg text-slate-700 mb-2">Other</Text>
+                <Text className="text-lg text-slate-700 mb-2">Operating Hours</Text>
                 <TextInput
                     className="border border-gray-300 p-2 rounded mb-4"
                     placeholder="Enter other"
@@ -245,7 +246,7 @@ export default function UpdateBusiness({ navigation, route }) {
                 )}
 
                 <TouchableOpacity
-                    className="bg-pink-400 rounded-full p-4 mt-4 mb-8"
+                    className="bg-teal-500 rounded-full p-4 mt-4 mb-8"
                     onPress={handleSubmit}
                     disabled={loading}
                 >

@@ -18,7 +18,7 @@ export default function UsersScreen({ navigation }) {
   const fetchData = async () => {
     setMainDataLoading(false);
     try {
-      setMainDataLoading(false);
+      setMainDataLoading(true);
       const response = await fetchUsers();
       setUsers(response);
     } catch (error) {
@@ -52,11 +52,14 @@ export default function UsersScreen({ navigation }) {
               <View key={index} className="p-4 bg-white rounded-lg mt-3">
                 <View>
                   <Text className="text-lg font-semibold">{user.firstname} {user.lastname}</Text>
-                  <Text className="text-md text-slate-600">{user.email}</Text>
-                  <Text className="text-md text-slate-600">{user.gender}</Text>
+                  <Text className="text-md text-slate-600">Email: {user.email}</Text>
+                  <Text className="text-md text-slate-600">Gender: {user.gender}</Text>
+                  <Text className="text-md text-slate-600">Course: {user.course}</Text>
+                  <Text className="text-md text-slate-600">Yearl Level: {user.year_level}</Text>
+                  <Text className="text-md text-slate-600">Contact: {user.contact}</Text>
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate('Your Favorites', { data: business })}
-                  className="flex flex-row gap-2 justify-center mt-4 items-center bg-pink-300 p-2 rounded-full">
+                <TouchableOpacity onPress={() => navigation.navigate('Update User', { data: user })}
+                  className="flex flex-row gap-2 justify-center mt-4 items-center bg-teal-500 p-2 rounded-full">
                   <FontAwesome6 name="edit" size={18} color={'white'} />
                   <Text className="text-white">EDIT</Text>
                 </TouchableOpacity>

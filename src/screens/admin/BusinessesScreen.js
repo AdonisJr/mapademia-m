@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native'
 import React, { useState, useEffect, useCallback } from 'react'
 import { useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -9,9 +9,13 @@ import Loading from '../../components/Loading';
 import Header from '../../components/Header';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { useRefreshStore } from '../../store/refreshStore';
+import { deleteBusiness } from '../../services/apiServices';
 
 export default function BusinessesScreen({ navigation }) {
   const businessesData = useBusinessStore(state => state.businessesData);
+  const toggleRefresh = useRefreshStore(state => state.toggleRefresh);
   const { setNavigation } = useCurrentNavStore();
   const [businesses, setBusinesses] = useState([]);
   const [mainDataLoading, setMainDataLoading] = useState(false);
@@ -20,7 +24,7 @@ export default function BusinessesScreen({ navigation }) {
   const fetchData = async () => {
     setMainDataLoading(false);
     try {
-      setMainDataLoading(false);
+      setMainDataLoading(true);
       setBusinesses(businessesData);
       console.log(businessesData)
     } catch (error) {
@@ -29,6 +33,40 @@ export default function BusinessesScreen({ navigation }) {
       setMainDataLoading(false);
     }
   }
+
+  const handleDelete = (id) => {
+    Alert.alert(
+      "Confirm Deletion",
+      "Are you sure you want to delete this business?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            setMainDataLoading(false);
+            try {
+              setMainDataLoading(true);
+              const response = await deleteBusiness(id);
+              Toast.show({
+                type: 'success',
+                text1: 'Delete',
+                text2: 'Business deleted successfully',
+              });
+              toggleRefresh();
+            } catch (error) {
+              console.log({ deleteBusiness: error });
+            } finally {
+              setMainDataLoading(false);
+            }
+          },
+        },
+      ]
+    );
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -50,7 +88,7 @@ export default function BusinessesScreen({ navigation }) {
           Businesses List
         </Text>
       </View>
-      <ScrollView className="px-3">
+      <ScrollView className="px-3 mb-48">
         {
           businesses.map((business, index) => (
             <View key={index} className="p-4 bg-white rounded-lg mt-3">
@@ -64,9 +102,14 @@ export default function BusinessesScreen({ navigation }) {
                 <Text className="text-slate-600">Email: {business.email}</Text>
               </View>
               <TouchableOpacity onPress={() => navigation.navigate('Update Business', { data: business })}
-                className="flex flex-row gap-2 justify-center mt-4 items-center bg-pink-300 p-2 rounded-full">
+                className="flex flex-row gap-2 justify-center mt-4 items-center bg-teal-500 p-2 rounded-full">
                 <FontAwesome6 name="edit" size={18} color={'white'} />
                 <Text className="text-white">EDIT</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleDelete(business.id)}
+                className="flex flex-row gap-2 justify-center mt-4 items-center bg-red-700 p-2 rounded-full">
+                <AntDesign name="delete" size={18} color="white" />
+                <Text className="text-white">Delete</Text>
               </TouchableOpacity>
             </View>
 

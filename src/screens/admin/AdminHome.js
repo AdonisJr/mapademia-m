@@ -127,6 +127,17 @@ const HomeScreen = ({ navigation, route }) => {
         setSelectedLocation({ latitude, longitude });
     };
 
+    const categoryImages = {
+        Eatery: require('../../../assets/eatery.png'),
+        Restaurant: require('../../../assets/eatery.png'),
+        Supermarket: require('../../../assets/supermarket.png'),
+        Bakery: require('../../../assets/bakery.png'),
+        Pharmacy: require('../../../assets/pharmacy.png'),
+        Bookstore: require('../../../assets/bookstore.png'),
+        Vulcanizing: require('../../../assets/vulcanizing.png'),
+        Printing: require('../../../assets/printing.png'),
+    };
+
     if (mainDataLoading) return <Loading />
 
     return (
@@ -151,11 +162,7 @@ const HomeScreen = ({ navigation, route }) => {
                                 }}
                                 title={business.name}
                                 description={`${business.description}`}
-                                image={
-                                    business.category.name === 'eatery' || business.category.name === 'restaurant'
-                                        ? require(`../../../assets/eatery.png`)
-                                        : require(`../../../assets/printing.png`)
-                                }
+                                image={categoryImages[business.category.name] || require('../../../assets/repair.png')}
                             >
                                 <Callout onPress={() => navigation.navigate('View Business', { data: business })} />
                             </Marker>
