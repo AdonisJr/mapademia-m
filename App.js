@@ -32,6 +32,7 @@ import UpdateBusiness from './src/screens/admin/UpdateBusiness';
 import UpdateUser from './src/screens/admin/UpdateUser';
 import ChangePassword from './src/screens/admin/ChangePassword';
 import ManageInformation from './src/screens/admin/ManageInformation';
+import SplashScreen from './src/screens/SplashScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -60,7 +61,9 @@ export default function App() {
   useEffect(() => {
     const fetchData = async () => {
       await getCredentials();
-      setIsLoading(false); // Mark loading as false when data is fetched
+      setTimeout(() => {
+        setIsLoading(false); // Mark loading as false when data is fetched
+      }, 10000)
     };
     fetchData();
   }, []);
@@ -69,9 +72,10 @@ export default function App() {
   // Show loading screen while fetching credentials
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Loading...</Text>
-      </View>
+      // <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      //   <Text>Loading...</Text>
+      // </View>
+      <SplashScreen />
     );
   }
 
@@ -187,8 +191,8 @@ function AdminApp() {
       {/* <FloatingAddButton currentRoute={currentRoute} /> */}
       <TouchableOpacity className={`absolute bottom-8 self-center bg-white rounded-full z-10 
             ${currentNav !== 'AdminUsers' ? 'hidden' : ''}`}
-            onPress={() => currentNav === 'AdminUsers' ? navigation.navigate('Insert User') : ''}
-            >
+        onPress={() => currentNav === 'AdminUsers' ? navigation.navigate('Insert User') : ''}
+      >
         <Ionicons name="add-circle" size={60} color="skyblue" />
       </TouchableOpacity>
     </View>

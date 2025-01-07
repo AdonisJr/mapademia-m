@@ -8,8 +8,8 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
+      "image": "./assets/splashback.png",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "ios": {
@@ -20,7 +20,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.sfxc.mapademia"
+      "package": "com.sfxc.mapademia",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyD8PsQC8uOFSZDGDaxwsWN5icPyqXgUmlU"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

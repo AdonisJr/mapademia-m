@@ -130,7 +130,7 @@ const HomeScreen = ({ navigation, route }) => {
   }
 
   const categoryImages = {
-    Eatery: require('../../assets/eatery.png'),
+    CoffeeShop: require('../../assets/coffee.png'),
     Restaurant: require('../../assets/eatery.png'),
     Supermarket: require('../../assets/supermarket.png'),
     Bakery: require('../../assets/bakery.png'),
@@ -138,6 +138,7 @@ const HomeScreen = ({ navigation, route }) => {
     Bookstore: require('../../assets/bookstore.png'),
     Vulcanizing: require('../../assets/vulcanizing.png'),
     Printing: require('../../assets/printing.png'),
+    ComputerShop: require('../../assets/computer.png'),
   };
 
   if (mainDataLoading) return <Loading />;

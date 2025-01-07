@@ -1,7 +1,7 @@
 import { View, Text, Image, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState, useCallback } from 'react';
 import { AirbnbRating, Rating } from 'react-native-ratings'; // For star rating
-import { IMG_URL } from '@env';
+import { IMG_URL, API_URL } from '@env';
 import { submitFeedback, fetchFeedbacks, insertFavorite, fetchFavorites, removeFavorite } from '../services/apiServices';
 import Toast from 'react-native-toast-message';
 import { timeAgo } from '../utils/convertDate';
@@ -209,7 +209,7 @@ export default function Feedback({ route }) {
             <View className="h-72 overflow-hidden border-b-8 border-slate-200">
                 <Image
                     // source={require('../../assets/samplebg.jpg')} // Local image
-                    source={{ uri: `${IMG_URL}${data?.image}` }}
+                    source={{ uri: `${API_URL}${data?.image}` }}
                     className="w-full h-full object-cover"
                 />
 
