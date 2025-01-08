@@ -59,13 +59,11 @@ export default function Header({ navigation, route }) {
             className="flex-col items-center"
             onPress={() =>
               currentApp === 'MainApp'
-                ? navigation.navigate('Services')
-                : currentApp === 'Faculty'
-                  ? navigation.navigate('Services')
-                  : navigation.navigate('AvailableTask')
+                ? navigation.navigate('MainApp') 
+                  : navigation.navigate('AdminApp')
             }
           >
-            <View className="flex flex-col items-center">
+            <View className="flex flex-row items-center">
               <Image
                 source={logo}
                 style={{ width: 30, height: 30 }}

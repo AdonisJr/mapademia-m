@@ -1,17 +1,18 @@
 // src/screens/LoginScreen.js
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, Button, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, TextInput, Button, Text, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import axios from 'axios';
 import { useUserStore } from '../store/userStore';
 import { API_URL, MAIN_URL, PROJECT_ID } from '@env'; // Import your project ID
 import Toast from 'react-native-toast-message'; // Import Toast
 import { storeData } from '../utils/LocalStorage';
+import logo from '../../assets/mapademia.png';
 
 // component
 import Loading from '../components/Loading';
 
 
-export default function LoginScreen({navigation}) {
+export default function LoginScreen({ navigation }) {
   const { setUser, setAccessToken } = useUserStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,9 +32,9 @@ export default function LoginScreen({navigation}) {
       setAccessToken(token);
       storeData('user', userDetails);
       storeData('accessToken', token)
-      if(userDetails.role === 'admin'){
+      if (userDetails.role === 'admin') {
         navigation.navigate('AdminApp');
-      }else{
+      } else {
         navigation.navigate('MainApp');
       }
       // setUser({ firstname: 'adonis', type: 'general services' })
@@ -49,6 +50,25 @@ export default function LoginScreen({navigation}) {
   return (
     <View className="flex-1 justify-center items-center">
       {isLoading && <Loading />}
+
+      <View className="flex-row items-center justify-center mt-5 bg-gray-100 mb-10">
+        <View className="flex flex-col items-center">
+          <Image
+            source={logo}
+            style={{ width: 100, height: 100 }}
+
+          />
+          {/* <Image
+                              source={logoText}
+                              className="rounded-lg"
+                              style={{ width: 150, height: 50 }}
+                              resizeMode="stretch"
+                          /> */}
+          <Text className="mt-5 text-xl text-slate-500 font-bold">
+              Login here
+          </Text>
+        </View>
+      </View>
       {/* Email input */}
       <TextInput
         placeholder="Email"

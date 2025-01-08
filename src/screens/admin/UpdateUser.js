@@ -53,7 +53,7 @@ export default function UpdateUser({ navigation, route }) {
             Toast.show({
                 type: 'success',
                 text1: 'Success',
-                text2: 'Business added successfully!',
+                text2: 'User updated successfully!',
             });
 
             // Return to the previous screen after a delay
