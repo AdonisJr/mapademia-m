@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Keyboard, ScrollView } from 'react-native';
 import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import Header from '../components/Header';
@@ -32,6 +32,9 @@ const HomeScreen = ({ navigation, route }) => {
   const [mainDataLoading, setMainDataLoading] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(true);
   const [search, setSearch] = useState('');
+  const [searchHistory, setSearchHistory] = useState([]);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [isShowHistory, setIsShowHistory] = useState(false);
 
   const getBusinesses = async () => {
     setMainDataLoading(false);
@@ -95,11 +98,53 @@ const HomeScreen = ({ navigation, route }) => {
     };
   }, []);
 
+  // Handle search
+  const handleSearch = async (text) => {
+    setLoading(true);
+    setSearch(text);
+    const filtered = businesses.filter((business) =>
+      business.name.toLowerCase().includes(text.toLowerCase()) ||
+      business.category.name.toLowerCase().includes(text.toLowerCase())
+    );
+    setTimeout(() => {
+      setFilteredBusinesses(filtered);
+      setLoading(false);
+      Keyboard.dismiss();
+      setIsShowHistory(false);
+    }, 2000)
+    // if (text !== '') {
+    //   setSearchHistory([...searchHistory, text])
+    //   getHistory();
+    // }
+    if (text.trim() !== "") {
+      // const searchData = searchHistory.filter(item => item !== text);
+      // setSearchHistory([text, ...searchHistory])
+      await storeData('history', [text, ...searchHistory.filter(history => history !== text)])
+      getHistory();
+    }
+
+  };
+
+  const removeHistory = async (text) => {
+    setLoading(true);
+    await storeData('history', searchHistory.filter(history => history !== text))
+    setTimeout(() => {
+      setLoading(false);
+      getHistory();
+    }, 1000)
+  }
+
+  const handleClearSearch = () => {
+    setSearch('');
+    setFilteredBusinesses(businesses);
+  }
+
   useFocusEffect(
     useCallback(() => {
       setCurrentApp('MainApp');
       getBusinesses();
       checkInternet();
+      getHistory();
     }, [region])
   );
 
@@ -109,24 +154,18 @@ const HomeScreen = ({ navigation, route }) => {
     } else {
       getBusinesses();
     }
-
     setIsNotifOpen(true);
+
   }, [isConnected, region, isRefresh]);
 
-  // Handle search
-  const handleSearch = async (text) => {
-    setSearch(text);
-    const filtered = businesses.filter((business) =>
-      business.name.toLowerCase().includes(text.toLowerCase()) ||
-      business.category.name.toLowerCase().includes(text.toLowerCase())
-    );
-    setFilteredBusinesses(filtered);
-
-  };
-
-  const handleClearSearch = () => {
-    setSearch('');
-    setFilteredBusinesses(businesses);
+  const getHistory = async () => {
+    const historyData = await getData('history');
+    if (!historyData) {
+      setSearchHistory([]);
+    } else {
+      setSearchHistory(historyData)
+    }
+    console.log({ historyData: historyData })
   }
 
   const categoryImages = {
@@ -154,6 +193,7 @@ const HomeScreen = ({ navigation, route }) => {
             placeholder="Search (business name, type)"
             value={search}
             onChangeText={(text) => setSearch(text)}
+            onFocus={() => setIsShowHistory(true)}
           />
           <TouchableOpacity className="absolute top-2 right-0 bg-white">
 
@@ -166,7 +206,30 @@ const HomeScreen = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={{ flex: 1 }}>
+
+
+      <View style={{ flex: 1 }} className="relative">
+        {/* search history */}
+        {
+          isShowHistory && searchHistory.length !== 0 &&
+          <ScrollView className="absolute z-20 h-32 pb-20 w-full mb-10">
+            <View className="absolute z-10 h-full w-full bg-white opacity-90 top-0"></View>
+            {
+              searchHistory && searchHistory.map((history, index) => (
+                <View key={index} className="flex flex-row justify-between items-center">
+                  <TouchableOpacity className="z-30 mt-2 ps-5 w-40" onPress={() => handleSearch(history)}>
+                    <Text className=" shadow p-1">{history}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity className="z-30 w-20" onPress={() => removeHistory(history)}>
+                    <AntDesign name="close" size={12} color="black" />
+                  </TouchableOpacity>
+                </View>
+
+              ))
+            }
+          </ScrollView>
+        }
+
         {region ? (
           <MapView
             style={styles.map}
@@ -174,8 +237,9 @@ const HomeScreen = ({ navigation, route }) => {
             showsUserLocation={true}
             provider={PROVIDER_GOOGLE}
             ref={mapRef}
+            onPress={() => [Keyboard.dismiss(), setIsShowHistory(false)]}
           >
-            {filteredBusinesses.map((business) => (
+            {filteredBusinesses && filteredBusinesses.map((business) => (
               <Marker
                 key={business.id}
                 coordinate={{
@@ -184,23 +248,6 @@ const HomeScreen = ({ navigation, route }) => {
                 }}
                 title={business.name}
                 description={business.description}
-                // image={
-                //   business.category.name === 'Eatery' || business.category.name === 'Restaurant'
-                //     ? require(`../../assets/eatery.png`) :
-                //     business.category.name === 'Supermarket' ?
-                //       require(`../../assets/supermarket.png`) :
-                //       business.category.name === 'bakery' ?
-                //         require(`../../assets/bakery.png`) :
-                //         business.category.name === 'Pharmacy' ?
-                //           require(`../../assets/pharmacy.png`) :
-                //           business.category.name === 'Bookstore' ?
-                //             require(`../../assets/bookstore.png`) :
-                //             business.category.name === 'Vulcanizing' ?
-                //               require(`../../assets/vulcanizing.png`) :
-                //               business.category.name === 'Printing' ?
-                //                 require(`../../assets/printing.png`)
-                //                 : require(`../../assets/repair.png`)
-                // }
                 image={categoryImages[business.category.name] || require('../../assets/repair.png')}
               >
                 <Callout onPress={() => navigation.navigate('View Business', { data: business })} />
@@ -223,6 +270,7 @@ const HomeScreen = ({ navigation, route }) => {
           </View>
         )}
       </View>
+      {loading && <Loading />}
     </View>
   );
 };

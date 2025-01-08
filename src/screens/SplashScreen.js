@@ -17,7 +17,7 @@ const SplashScreen = () => {
                 />
                 
                 <Text className="text-2xl font-bold">Welcome to MAPADEMIA</Text>
-                <Text className="text-md font-bold text-slate-600">Connecting Students with Local Services</Text>
+                <Text className="text-md font-bold text-slate-600">Connecting Students with Local Businesses</Text>
                 <Text className="text-lg font-semibold animate-pulse mt-20">Please wait...</Text>
             </View>
         </View>

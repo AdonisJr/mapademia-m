@@ -82,6 +82,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
+      <StatusBar />
       <Stack.Navigator initialRouteName={!userState ? 'Login' : userState.role === 'admin' ? 'AdminApp' : 'MainApp'}>
         <Stack.Screen name="MainApp" component={MainApp} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />

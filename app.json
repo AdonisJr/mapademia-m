@@ -4,11 +4,11 @@
     "slug": "mapademia-m",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/mapademia.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splashback.png",
+      "image": "./assets/mapademia.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
