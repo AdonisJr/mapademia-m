@@ -2,17 +2,33 @@ import { View, Text, ScrollView, TextInput, TouchableOpacity, Image, ActivityInd
 import React, { useEffect, useState } from 'react';
 import Toast from 'react-native-toast-message';
 import * as ImagePicker from 'expo-image-picker';
-import { fetchCategory, editBusiness } from '../../services/apiServices';
+import { fetchCategory, updateBusiness } from '../../services/apiServices';
 import Loading from '../../components/Loading';
 import { Picker } from '@react-native-picker/picker';
+import { useRefreshStore } from '../../store/refreshStore';
+import { getData } from '../../utils/LocalStorage';
+import axios from 'axios';
+import { API_URL, API_KEY } from '@env';
 
-export default function UpdateBusiness({ navigation, route }) {
-    const formData = route.params.data;
+export default function EditBusiness({ navigation, route }) {
+    const data = route.params.data;
+    const toggleRefresh = useRefreshStore(state => state.toggleRefresh);
     const [categories, setCategories] = useState([]);
     const [mainDataLoading, setMainDataLoading] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const [form, setForm] = useState(formData);
+    const [form, setForm] = useState({
+        latitude: data.latitude,
+        longitude: data.longitude,
+        name: data.name,
+        category_id: data.category_id,
+        description: data.description,
+        address: data.address,
+        contact: data.contact,
+        email: data.email,
+        owner: data.owner,
+        other: data.other
+    });
 
     const [image, setImage] = useState(null);
 
@@ -43,7 +59,7 @@ export default function UpdateBusiness({ navigation, route }) {
     };
 
     const handleSubmit = async () => {
-        console.log(form)
+        const accessToken = await getData('accessToken')
         setLoading(true);
         try {
             // Validation
@@ -64,20 +80,31 @@ export default function UpdateBusiness({ navigation, route }) {
             });
 
             // Handle image attachment
-            formData.append('image', {
-                uri: image,
-                name: 'photo.jpg', // Ensure a valid file name with an extension
-                type: 'image/jpeg', // Adjust MIME type based on your file
-            });
+            if (image) {
+                formData.append('image', {
+                    uri: image,
+                    name: 'photo.jpg', // Ensure a valid file name with an extension
+                    type: 'image/jpeg', // Adjust MIME type based on your file
+                });
+            }
+
+
             // Make API call
-            const response = await editBusiness(formData, form.id);
+            // const response = await updateBusiness(formData, data.id);
+            const response = await axios.post(`${API_URL}/updateBusinesses/${data.id}`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
 
             // Show success toast
             Toast.show({
                 type: 'success',
                 text1: 'Success',
-                text2: 'Business added successfully!',
+                text2: 'Business updated successfully!',
             });
+            toggleRefresh();
 
             // Return to the previous screen after a delay
             setTimeout(() => {
@@ -85,7 +112,7 @@ export default function UpdateBusiness({ navigation, route }) {
                 navigation.goBack();
             }, 2000);
         } catch (error) {
-            console.log('Submission Error: ', error);
+            console.log('Submission Error: ', error.response.data.message);
             Toast.show({
                 type: 'error',
                 text1: 'Error',
@@ -106,7 +133,9 @@ export default function UpdateBusiness({ navigation, route }) {
             contact: '',
             email: '',
             owner: '',
-            other: ''
+            other: '',
+            latitude: data.latitude.toString(),
+            longitude: data.longitude.toString(),
         });
         setImage(null);
     }
@@ -140,7 +169,6 @@ export default function UpdateBusiness({ navigation, route }) {
                     placeholder="Enter latitude"
                     value={form.latitude}
                     onChangeText={(text) => handleInputChange('latitude', text)}
-                    editable={false}
                 />
 
                 <Text className="text-lg text-slate-700 mb-2">Longitude</Text>
@@ -149,7 +177,6 @@ export default function UpdateBusiness({ navigation, route }) {
                     placeholder="Enter longitude"
                     value={form.longitude}
                     onChangeText={(text) => handleInputChange('longitude', text)}
-                    editable={false}
                 />
 
                 <Text className="text-lg text-slate-700 mb-2">Name</Text>
@@ -246,7 +273,7 @@ export default function UpdateBusiness({ navigation, route }) {
                 )}
 
                 <TouchableOpacity
-                    className="bg-teal-500 rounded-full p-4 mt-4 mb-8"
+                    className="bg-blue-500 p-4 rounded mt-4 mb-6"
                     onPress={handleSubmit}
                     disabled={loading}
                 >
@@ -257,7 +284,6 @@ export default function UpdateBusiness({ navigation, route }) {
                     )}
                 </TouchableOpacity>
             </ScrollView>
-            {loading && <Loading />}
             <Toast />
         </View>
     );

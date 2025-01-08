@@ -33,6 +33,7 @@ import UpdateUser from './src/screens/admin/UpdateUser';
 import ChangePassword from './src/screens/admin/ChangePassword';
 import ManageInformation from './src/screens/admin/ManageInformation';
 import SplashScreen from './src/screens/SplashScreen';
+import EditBusiness from './src/screens/admin/EditBusiness';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -89,7 +90,7 @@ export default function App() {
         <Stack.Screen name="Register" component={RegistrationScreen} options={{ headerShown: false }} />
         <Stack.Screen name="AdminApp" component={AdminApp} options={{ headerShown: false }} />
         <Stack.Screen name="Insert Business" component={InsertBusiness} />
-        <Stack.Screen name="Update Business" component={UpdateBusiness} />
+        <Stack.Screen name="Update Business" component={EditBusiness} />
         <Stack.Screen name="View Business" component={Feedback} />
         <Stack.Screen name="Your Favorites" component={Favorite} />
         <Stack.Screen name="Insert User" component={InsertUsers} />
