@@ -48,9 +48,7 @@ export const insertBusiness = async (payload) => {
 }
 
 export const updateBusiness = async (payload, id) => {
-    // console.log({ filetype: typeof (payload.image) })
-    // console.log({ payload: payload })
-    console.log({url: `/updateBusinesses/${id}`})
+    // console.log({ url: `/updateBusinesses/${id}` })
     try {
         const response = await apiClient.put(`/updateBusinesses/${id}`, payload, {
             headers: {
@@ -65,6 +63,22 @@ export const updateBusiness = async (payload, id) => {
         throw new Error('Failed to update business.')
     }
 }
+
+// export const editBusiness = async (payload, id) => {
+//     try {
+//         const response = await apiClient.post(`/updateBusinesses/${id}`, payload, {
+//             headers: {
+//                 'Content-Type': 'multipart/form-data',
+//             }
+//         })
+//         console.log('response data: ', response)
+//         return response.data;
+//     } catch (error) {
+//         console.log({ call: error })
+//         console.log('apiServices/update : ', error.response?.data?.message)
+//         throw new Error('Failed to update business.')
+//     }
+// }
 
 export const deleteBusiness = async (id) => {
     try {
@@ -95,7 +109,7 @@ export const fetchCategory = async () => {
 export const fetchFeedbacks = async (id) => {
     try {
         const response = await apiClient.get(`/feedback/${id}`)
-        console.log('feedbacks: ', response.data)
+        // console.log('feedbacks: ', response.data)
         return response.data;
     } catch (error) {
         console.log('apiServices/fetchFeedbacks : ', error)

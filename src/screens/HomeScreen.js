@@ -17,6 +17,7 @@ import { useInternetStore } from '../store/internetStore';
 import { useBusinessStore } from '../store/businessStore';
 import { useFavoriteStore } from '../store/favoriteStore';
 import { useRefreshStore } from '../store/refreshStore';
+import Ads from '../components/Ads';
 
 const HomeScreen = ({ navigation, route }) => {
   const { setConnection, isConnected } = useInternetStore();
@@ -35,6 +36,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [searchHistory, setSearchHistory] = useState([]);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [isShowHistory, setIsShowHistory] = useState(false);
+  const [isAdsOpen, setIsAdsOpen] = useState(true);
 
   const getBusinesses = async () => {
     setMainDataLoading(false);
@@ -70,23 +72,6 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   const mapRef = useRef([]);
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Permission to access location was denied');
-        return;
-      }
-
-      setRegion({
-        latitude: 8.503779,
-        longitude: 125.976459,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      });
-    })();
-  }, []);
 
   const checkInternet = useCallback(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -141,11 +126,26 @@ const HomeScreen = ({ navigation, route }) => {
 
   useFocusEffect(
     useCallback(() => {
+      (async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Permission to access location was denied');
+          return;
+        }
+
+        setRegion({
+          latitude: 8.503779,
+          longitude: 125.976459,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        });
+      })();
       setCurrentApp('MainApp');
       getBusinesses();
       checkInternet();
       getHistory();
-    }, [region])
+      setIsAdsOpen(true);
+    }, [])
   );
 
   useEffect(() => {
@@ -157,6 +157,10 @@ const HomeScreen = ({ navigation, route }) => {
     setIsNotifOpen(true);
 
   }, [isConnected, region, isRefresh]);
+
+  useEffect(() => {
+      getBusinesses();
+    }, [region])
 
   const getHistory = async () => {
     const historyData = await getData('history');
@@ -171,6 +175,7 @@ const HomeScreen = ({ navigation, route }) => {
   const categoryImages = {
     CoffeeShop: require('../../assets/coffee.png'),
     Restaurant: require('../../assets/eatery.png'),
+    Eatery: require('../../assets/eatery.png'),
     Supermarket: require('../../assets/supermarket.png'),
     Bakery: require('../../assets/bakery.png'),
     Pharmacy: require('../../assets/pharmacy.png'),
@@ -269,6 +274,13 @@ const HomeScreen = ({ navigation, route }) => {
             </View>
           </View>
         )}
+        {
+          !isAdsOpen ? '' :
+            <View className="absolute bottom-0 z-50 w-full h-40">
+              <Ads setIsAdsOpen={setIsAdsOpen} />
+            </View>
+        }
+
       </View>
       {loading && <Loading />}
     </View>

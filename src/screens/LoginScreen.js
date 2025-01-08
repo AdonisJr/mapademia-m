@@ -65,7 +65,7 @@ export default function LoginScreen({ navigation }) {
                               resizeMode="stretch"
                           /> */}
           <Text className="mt-5 text-xl text-slate-500 font-bold">
-              Login here
+            Login here
           </Text>
         </View>
       </View>
