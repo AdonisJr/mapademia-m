@@ -1,4 +1,4 @@
-import { View, Text, Image, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState, useCallback } from 'react';
 import { AirbnbRating, Rating } from 'react-native-ratings'; // For star rating
 import { IMG_URL, API_URL } from '@env';
@@ -9,13 +9,15 @@ import Loading from '../components/Loading';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useFocusEffect } from '@react-navigation/native';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { getData } from '../utils/LocalStorage';
 import { useRefreshStore } from '../store/refreshStore';
 import { useInternetStore } from '../store/internetStore';
 import { useFavoriteStore } from '../store/favoriteStore';
 
-export default function Feedback({ route }) {
+export default function Feedback({navigation, route }) {
     const data = route.params.data;
 
     const toggleRefresh = useRefreshStore(state => state.toggleRefresh);
@@ -206,13 +208,18 @@ export default function Feedback({ route }) {
     return (
         <View className="flex-1">
             {/* Image Section */}
-            <View className="h-72 overflow-hidden border-b-8 border-slate-200">
+            <View className="relative h-72 overflow-hidden border-b-8 border-slate-200">
                 <Image
                     // source={require('../../assets/samplebg.jpg')} // Local image
                     source={{ uri: `${API_URL}${data?.image}` }}
                     className="w-full h-full object-cover"
                 />
-
+                <TouchableOpacity onPress={() => navigation.navigate('Menu List', { data: data })}
+                    className="flex flex-row gap-2 justify-center mt-4 items-center bg-slate-500 p-2 rounded-lg
+                    pe-2 absolute bottom-2 left-2">
+                    <MaterialCommunityIcons name="view-grid-outline" size={20} color={'white'} />
+                    <Text className="text-white font-bold">{data.category.name === 'Restaurant' || 'Eatery' ? 'MENU' : 'SERVICES'}</Text>
+                </TouchableOpacity>
             </View>
             {/* Header Text */}
             <View className="px-4 pb-2 bg-slate-100 flex flex-row justify-between pe-5 items-center">
@@ -223,6 +230,7 @@ export default function Feedback({ route }) {
                     <Text className="font-semibold text-slate-600 text-xs">Owner: {data.owner}</Text>
                     <Text className="font-semibold text-slate-600 text-xs">Contact: {data.contact}</Text>
                     <Text className="font-semibold text-slate-600 text-xs">Operating Hours: {data.other}</Text>
+                    <Text className="font-semibold text-slate-600 text-xs">Price Range: {data.price_from} - {data.price_to}</Text>
                 </View>
                 {
                     hasFavorite ?

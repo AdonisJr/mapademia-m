@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Keyboard, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Keyboard, ScrollView, Image } from 'react-native';
 import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import Header from '../components/Header';
@@ -10,8 +10,19 @@ import NetInfo from '@react-native-community/netinfo';
 import { getData, storeData } from '../utils/LocalStorage';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
+import Slider from '@react-native-community/slider';
 
 import Loading from '../components/Loading';
+
+import CoffeeShop from '../../assets/coffee.png';
+import restaurant from '../../assets/eatery.png'
+import superMarket from '../../assets/supermarket.png'
+import bakery from '../../assets/bakery.png'
+import pharmacy from '../../assets/pharmacy.png'
+import bookStore from '../../assets/bookstore.png'
+import vulcanizing from '../../assets/vulcanizing.png'
+import printing from '../../assets/printing.png'
+import computerShop from '../../assets/computer.png'
 
 import { useInternetStore } from '../store/internetStore';
 import { useBusinessStore } from '../store/businessStore';
@@ -37,6 +48,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [isShowHistory, setIsShowHistory] = useState(false);
   const [isAdsOpen, setIsAdsOpen] = useState(true);
+  const [range, setRange] = useState(1000)
 
   const getBusinesses = async () => {
     setMainDataLoading(false);
@@ -88,8 +100,8 @@ const HomeScreen = ({ navigation, route }) => {
     setLoading(true);
     setSearch(text);
     const filtered = businesses.filter((business) =>
-      business.name.toLowerCase().includes(text.toLowerCase()) ||
-      business.category.name.toLowerCase().includes(text.toLowerCase())
+      business.name.toLowerCase().includes(text.toLowerCase()) && business.price_from >= 30 & business.price_from <= range ||
+      business.category.name.toLowerCase().includes(text.toLowerCase())  && business.price_from >= 30 & business.price_from <= range
     );
     setTimeout(() => {
       setFilteredBusinesses(filtered);
@@ -140,6 +152,7 @@ const HomeScreen = ({ navigation, route }) => {
           longitudeDelta: 0.01,
         });
       })();
+      setRange(1000)
       setCurrentApp('MainApp');
       getBusinesses();
       checkInternet();
@@ -159,8 +172,8 @@ const HomeScreen = ({ navigation, route }) => {
   }, [isConnected, region, isRefresh]);
 
   useEffect(() => {
-      getBusinesses();
-    }, [region])
+    getBusinesses();
+  }, [region])
 
   const getHistory = async () => {
     const historyData = await getData('history');
@@ -190,6 +203,71 @@ const HomeScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <Header navigation={navigation} route={route} />
+      <View className="p-2 flex flex-row gap-1 overflow-x-auto">
+        <TouchableOpacity onPress={() => handleSearch('restaurant')}>
+          <Image
+            source={restaurant}
+            style={{ width: 35, height: 35 }}
+            className=""
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleSearch('coffeeshop')}>
+          <Image
+            source={CoffeeShop}
+            style={{ width: 35, height: 35 }}
+            className=""
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleSearch('printing')}>
+          <Image
+            source={printing}
+            style={{ width: 35, height: 35 }}
+            className=""
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleSearch('computershop')}>
+          <Image
+            source={computerShop}
+            style={{ width: 35, height: 35 }}
+            className=""
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleSearch('vulcanizing')}>
+          <Image
+            source={vulcanizing}
+            style={{ width: 35, height: 35 }}
+            className=""
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleSearch('bakery')}>
+          <Image
+            source={bakery}
+            style={{ width: 35, height: 35 }}
+            className=""
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleSearch('bookstore')}>
+          <Image
+            source={bookStore}
+            style={{ width: 35, height: 35 }}
+            className=""
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleSearch('pharmacy')}>
+          <Image
+            source={pharmacy}
+            style={{ width: 35, height: 35 }}
+            className=""
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleSearch('supermarket')}>
+          <Image
+            source={superMarket}
+            style={{ width: 35, height: 35 }}
+            className=""
+          />
+        </TouchableOpacity>
+      </View>
 
       <View className="flex flex-row items-center p-2 bg-white mt-2">
         <View className="relative w-5/6">
@@ -209,6 +287,24 @@ const HomeScreen = ({ navigation, route }) => {
         <TouchableOpacity onPress={() => handleSearch(search)}>
           <Feather name="search" size={24} color="black" className="ps-4" />
         </TouchableOpacity>
+      </View>
+      <View className="flex flex-row justify-center items-end bg-white">
+        <Text>{`\u20B1`}30 - {`\u20B1${range}`}</Text>
+      </View>
+      <View className="flex flex-row items-center ps-4 bg-white pb-2">
+        <Text>Price Range</Text>
+        <Slider
+          step={1}  // Ensure no decimals by setting step
+          fromValueOnChange={value => setFromValue(Math.round(value))}
+          toValueOnChange={value => setToValue(Math.round(value))}
+          style={{ width: 200, height: 10 }}
+          minimumValue={30}
+          maximumValue={1000}
+          minimumTrackTintColor="black"
+          maximumTrackTintColor="#000000"
+          value={1000}
+          onValueChange={(text) => setRange(text)}
+        />
       </View>
 
 

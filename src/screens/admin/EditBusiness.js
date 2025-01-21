@@ -27,7 +27,9 @@ export default function EditBusiness({ navigation, route }) {
         contact: data.contact,
         email: data.email,
         owner: data.owner,
-        other: data.other
+        other: data.other,
+        price_from: data.price_from,
+        price_to: data.price_to
     });
 
     const [image, setImage] = useState(null);
@@ -256,6 +258,27 @@ export default function EditBusiness({ navigation, route }) {
                     value={form.other}
                     onChangeText={(text) => handleInputChange('other', text)}
                 />
+
+                {/* price range */}
+                <Text className="text-lg text-slate-700 mb-2">Price Range</Text>
+                <View className="flex flex-row gap-2 pe-2">
+                    {/* price from */}
+                    <TextInput
+                        className="border border-gray-300 p-2 rounded mb-4 w-3/6"
+                        placeholder="From"
+                        value={form.price_from}
+                        onChangeText={(text) => handleInputChange('price_from', text)}
+                        keyboardType='numeric'
+                    />
+                    {/* price to */}
+                    <TextInput
+                        className="border border-gray-300 p-2 rounded mb-4 w-3/6"
+                        placeholder="To"
+                        value={form.price_to}
+                        onChangeText={(text) => handleInputChange('price_to', text)}
+                        keyboardType='numeric'
+                    />
+                </View>
 
                 <Text className="text-lg text-slate-700 mb-2">Image</Text>
                 <TouchableOpacity

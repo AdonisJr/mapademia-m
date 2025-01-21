@@ -64,6 +64,23 @@ export const updateBusiness = async (payload, id) => {
     }
 }
 
+
+export const insertMenu = async (payload) => {
+    // console.log({ filetype: typeof (payload.image) })
+    try {
+        const response = await apiClient.post(`/menu`, payload, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+        console.log('response data: ', response.data)
+        return response.data;
+    } catch (error) {
+        console.log('apiServices/insertMenu : ', error.response.data.message)
+        throw new Error('Failed to insert menu.')
+    }
+}
+
 // export const editBusiness = async (payload, id) => {
 //     try {
 //         const response = await apiClient.post(`/updateBusinesses/${id}`, payload, {

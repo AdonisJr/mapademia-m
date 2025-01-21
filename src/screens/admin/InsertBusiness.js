@@ -68,23 +68,23 @@ export default function InsertBusiness({ navigation, route }) {
                 setLoading(false);
                 return;
             }
-    
+
             // Prepare FormData
             const formData = new FormData();
             Object.keys(form).forEach(key => {
                 formData.append(key, form[key]);
             });
-    
+
             // Handle image attachment
             formData.append('image', {
                 uri: image,
                 name: 'photo.jpg', // Ensure a valid file name with an extension
                 type: 'image/jpeg', // Adjust MIME type based on your file
             });
-    
+
             // Make API call
             const response = await insertBusiness(formData);
-    
+
             // Show success toast
             Toast.show({
                 type: 'success',
@@ -92,7 +92,7 @@ export default function InsertBusiness({ navigation, route }) {
                 text2: 'Business added successfully!',
             });
             toggleRefresh();
-    
+
             // Return to the previous screen after a delay
             setTimeout(() => {
                 clearForm();
@@ -243,6 +243,27 @@ export default function InsertBusiness({ navigation, route }) {
                     value={form.other}
                     onChangeText={(text) => handleInputChange('other', text)}
                 />
+
+                {/* price range */}
+                <Text className="text-lg text-slate-700 mb-2">Price Range</Text>
+                <View className="flex flex-row gap-2 pe-2">
+                    {/* price from */}
+                    <TextInput
+                        className="border border-gray-300 p-2 rounded mb-4 w-3/6"
+                        placeholder="From"
+                        value={form.price_from}
+                        onChangeText={(text) => handleInputChange('price_from', text)}
+                        keyboardType='numeric'
+                    />
+                    {/* price to */}
+                    <TextInput
+                        className="border border-gray-300 p-2 rounded mb-4 w-3/6"
+                        placeholder="To"
+                        value={form.price_to}
+                        onChangeText={(text) => handleInputChange('price_to', text)}
+                        keyboardType='numeric'
+                    />
+                </View>
 
                 <Text className="text-lg text-slate-700 mb-2">Image</Text>
                 <TouchableOpacity

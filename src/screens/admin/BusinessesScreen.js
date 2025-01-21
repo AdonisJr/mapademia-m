@@ -12,6 +12,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useRefreshStore } from '../../store/refreshStore';
 import { deleteBusiness } from '../../services/apiServices';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function BusinessesScreen({ navigation }) {
   const businessesData = useBusinessStore(state => state.businessesData);
@@ -100,7 +101,13 @@ export default function BusinessesScreen({ navigation }) {
                 <Text className="text-slate-600">Owner: {business.owner}</Text>
                 <Text className="text-slate-600">Contact: {business.contact}</Text>
                 <Text className="text-slate-600">Email: {business.email}</Text>
+                <Text className="text-slate-600">Price Range: {business.price_from} - {business.price_to}</Text>
               </View>
+              <TouchableOpacity onPress={() => navigation.navigate('Menu List', { data: business })}
+                className="flex flex-row gap-2 justify-center mt-4 items-center bg-teal-500 p-2 rounded-full">
+                <MaterialCommunityIcons name="menu-down" size={20} color={'white'} />
+                <Text className="text-white">VIEW {business.category.name === 'Restaurant' || 'Eatery' ? 'MENU' : 'SERVICES'}</Text>
+              </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate('Update Business', { data: business })}
                 className="flex flex-row gap-2 justify-center mt-4 items-center bg-teal-500 p-2 rounded-full">
                 <FontAwesome6 name="edit" size={18} color={'white'} />
@@ -109,7 +116,7 @@ export default function BusinessesScreen({ navigation }) {
               <TouchableOpacity onPress={() => handleDelete(business.id)}
                 className="flex flex-row gap-2 justify-center mt-4 items-center bg-red-700 p-2 rounded-full">
                 <AntDesign name="delete" size={18} color="white" />
-                <Text className="text-white">Delete</Text>
+                <Text className="text-white">DELETE</Text>
               </TouchableOpacity>
             </View>
 

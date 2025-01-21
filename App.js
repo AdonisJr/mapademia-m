@@ -34,6 +34,8 @@ import ChangePassword from './src/screens/admin/ChangePassword';
 import ManageInformation from './src/screens/admin/ManageInformation';
 import SplashScreen from './src/screens/SplashScreen';
 import EditBusiness from './src/screens/admin/EditBusiness';
+import InsertMenus from './src/screens/admin/InsertMenus';
+import MenusScreen from './src/screens/admin/MenusScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -97,6 +99,8 @@ export default function App() {
         <Stack.Screen name="Update User" component={UpdateUser} />
         <Stack.Screen name="Change Password" component={ChangePassword} />
         <Stack.Screen name="Manage Information" component={ManageInformation} />
+        <Stack.Screen name="Menu List" component={MenusScreen} />
+        <Stack.Screen name="Insert Menu" component={InsertMenus} />
 
       </Stack.Navigator>
     </NavigationContainer>
